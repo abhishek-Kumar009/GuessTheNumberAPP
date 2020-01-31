@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
   Button,
   TouchableWithoutFeedback,
   Alert,
-  Keyboard
+  Keyboard,
+  Dimensions,
+  ScrollView,
+  KeyboardAvoidingView
 } from 'react-native';
 import MainButton from './MainButton';
 import TitleText from './TitleText';
@@ -15,10 +18,23 @@ import Colors from '../constants/colors';
 import NumberContainer from './NumberContainer';
 import Input from './Input';
 
+const screenWidthLarge = Dimensions.get('window').width > 350 ? true : false;
+
 const GameInput = props => {
   const [enteredText, setEnteredText] = useState('');
   const [selectedNumber, setSelectedNumber] = useState();
   const [confirmed, setConfirmed] = useState(false);
+  const [btnWidth, setBtnWidth] = useState(Dimensions.get('window').width / 4);
+
+  useEffect(() => {
+    const updateLayout = () => {
+      setBtnWidth(Dimensions.get('window').width / 4);
+    };
+    Dimensions.addEventListener('change', updateLayout);
+    return () => {
+      Dimensions.removeEventListener('change', updateLayout);
+    };
+  });
 
   const inputHandler = enteredText => {
     setEnteredText(enteredText.replace(/[^0-9]/g, ''));
@@ -58,46 +74,48 @@ const GameInput = props => {
     setSelectedNumber();
   };
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.mainContainer}>
-        <View>
-          <TitleText style={styles.textTitle}>Start a new Game!</TitleText>
-        </View>
-        <Card style={styles.inputContainer}>
-          <BodyText style={styles.genInfo}>Enter a number</BodyText>
-          <View style={styles.textArea}>
-            <Input
-              style={styles.text}
-              value={enteredText}
-              onChangeText={inputHandler}
-              autoCapitalize='none'
-              autoCorrect={false}
-              blurOnSubmit={true}
-              keyboardType='number-pad'
-              maxLength={3}
-            />
+    <ScrollView>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <View style={styles.mainContainer}>
+          <View>
+            <TitleText style={styles.textTitle}>Start a new Game!</TitleText>
           </View>
+          <Card style={styles.inputContainer}>
+            <BodyText style={styles.genInfo}>Enter a number</BodyText>
+            <View style={styles.textArea}>
+              <Input
+                style={styles.text}
+                value={enteredText}
+                onChangeText={inputHandler}
+                autoCapitalize='none'
+                autoCorrect={false}
+                blurOnSubmit={true}
+                keyboardType='number-pad'
+                maxLength={3}
+              />
+            </View>
 
-          <View style={styles.submitType}>
-            <View style={styles.btn}>
-              <Button
-                color={Colors.secondary}
-                title='RESET'
-                onPress={resetInputHandler}
-              />
+            <View style={styles.submitType}>
+              <View style={{ width: btnWidth }}>
+                <Button
+                  color={Colors.secondary}
+                  title='RESET'
+                  onPress={resetInputHandler}
+                />
+              </View>
+              <View style={{ width: btnWidth }}>
+                <Button
+                  color={Colors.primary}
+                  title='CONFIRM'
+                  onPress={confirmInputHandler}
+                />
+              </View>
             </View>
-            <View style={styles.btn}>
-              <Button
-                color={Colors.primary}
-                title='CONFIRM'
-                onPress={confirmInputHandler}
-              />
-            </View>
-          </View>
-        </Card>
-        {confirmedOutput}
-      </View>
-    </TouchableWithoutFeedback>
+          </Card>
+          {confirmedOutput}
+        </View>
+      </TouchableWithoutFeedback>
+    </ScrollView>
   );
 };
 
@@ -108,11 +126,11 @@ const styles = StyleSheet.create({
     padding: 15
   },
   textTitle: {
-    marginVertical: 10
+    marginVertical: 5
   },
   inputContainer: {
-    width: 300,
-    maxWidth: '80%',
+    width: '70%',
+
     alignItems: 'center'
   },
   genInfo: {
@@ -131,23 +149,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 10,
-    width: '80%'
+    marginVertical: screenWidthLarge ? 20 : 5,
+    width: '94%'
   },
 
   outputContainer: {
-    width: 300,
+    width: '70%',
     maxWidth: '80%',
     alignItems: 'center',
     padding: 20
   },
   startText: {
     fontFamily: 'open-sans-regular'
-  },
-  btn: {
-    width: '40%'
   }
+  // btn: {
+  //   width: Dimensions.get('window').width / 4
+  // }
 });
 
 export default GameInput;

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, Dimensions } from 'react-native';
+const screenWidthLarge = Dimensions.get('window').width > 350 ? true : false;
 
 const BodyText = props => {
   return (
@@ -10,7 +11,7 @@ const BodyText = props => {
 const styles = StyleSheet.create({
   title: {
     fontFamily: 'open-sans-regular',
-    fontSize: 15
+    fontSize: screenWidthLarge ? 15 : 10
   }
 });
 

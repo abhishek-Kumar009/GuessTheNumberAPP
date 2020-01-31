@@ -1,5 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions
+} from 'react-native';
 import Colors from '../constants/colors';
 
 const MainButton = props => {
@@ -15,7 +21,7 @@ const MainButton = props => {
 const styles = StyleSheet.create({
   btnContainer: {
     backgroundColor: Colors.primary,
-    paddingVertical: 12,
+    paddingVertical: 10,
     paddingHorizontal: 30,
     borderRadius: 25
   },
