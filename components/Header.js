@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions, Platform } from 'react-native';
 import Colors from '../constants/colors';
 import TitleText from './TitleText';
 
@@ -7,20 +7,35 @@ const screenWidthLarge = Dimensions.get('window').width > 350 ? true : false;
 
 const Header = props => {
   return (
-    <View style={styles.headerContainer}>
+    <View
+      style={{
+        ...styles.headerBase,
+        ...Platform.select({
+          ios: styles.iosStyle,
+          android: styles.androidStyle
+        })
+      }}
+    >
       <TitleText style={styles.heading}>Guess a number</TitleText>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  headerContainer: {
+  headerBase: {
     padding: 36,
     width: '100%',
     height: screenWidthLarge ? 80 : 50,
-    backgroundColor: Colors.primary,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  iosStyle: {
+    backgroundColor: 'white',
+    borderColor: '#ccc',
+    borderWidth: 1
+  },
+  androidStyle: {
+    backgroundColor: Colors.primary
   },
   heading: {
     marginVertical: 10,
